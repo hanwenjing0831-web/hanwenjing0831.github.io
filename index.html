@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交互网页设计：LOCHNER V. NEW YORK 法庭意见书</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        // 交互功能：术语hover提示、目录跳转、案例要点折叠/展开
+        document.addEventListener('DOMContentLoaded', function() {
+            // 目录跳转功能
+            const navLinks = document.querySelectorAll('#toc a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // 案例要点折叠/展开功能
+            const collapseHeaders = document.querySelectorAll('.collapse-header');
+            collapseHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const icon = this.querySelector('i');
+                    if (content.style.display === 'none' || !content.style.display) {
+                        content.style.display = 'block';
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        content.style.display = 'none';
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
+            });
+
+            // 术语hover提示功能（基于title属性已实现，此处补充样式优化）
+            const terms = document.querySelectorAll('.term');
+            terms.forEach(term => {
+                term.style.cursor = 'help';
+                term.style.textDecoration = 'underline dotted #1a5276';
+            });
+        });
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .term-hover {
+                position: relative;
+            }
+            .term-hover:hover::after {
+                content: attr(title);
+                position: absolute;
+                bottom: 125%;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #276879;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.875rem;
+                white-space: nowrap;
+                z-index: 10;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .term-hover:hover::before {
+                content: '';
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border-width: 5px;
+                border-style: solid;
+                border-color: #276879 transparent transparent transparent;
+                z-index: 10;
+            }
+            .sidebar-sticky {
+                position: sticky;
+                top: 2rem;
+                height: calc(100vh - 4rem);
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- 顶部导航栏 -->
+    <header class="bg-blue-800 text-white shadow-md fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-Georgia font-bold">LOCHNER V. NEW YORK 法庭意见书</h1>
+            <div class="md:hidden">
+                <button id="mobileMenuBtn" class="focus:outline-none">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- 移动端菜单（默认隐藏） -->
+        <div id="mobileMenu" class="hidden md:hidden bg-blue-700 px-4 py-2">
+            <nav id="mobileToc">
+                <a href="#designer" class="block py-2 hover:bg-blue-600 px-2 rounded">设计者信息</a>
+                <a href="#design-method" class="block py-2 hover:bg-blue-600 px-2 rounded">设计工具、方法、过程</a>
+                <a href="#case-elements" class="block py-2 hover:bg-blue-600 px-2 rounded">法庭意见书要素</a>
+                <a href="#bilingual-knowledge" class="block py-2 hover:bg-blue-600 px-2 rounded">双语知识库</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主体内容区 -->
+    <main class="container mx-auto px-4 pt-24 pb-16 flex flex-col md:flex-row gap-8">
+        <!-- 左侧目录栏（桌面端显示，移动端隐藏） -->
+        <aside class="hidden md:block w-64 flex-shrink-0">
+            <nav id="toc" class="bg-white rounded-lg shadow p-4 sidebar-sticky">
+                <h3 class="text-lg font-Georgia font-bold text-blue-800 border-b-2 border-gray-200 pb-2 mb-4">目录</h3>
+                <ul class="space-y-2">
+                    <li><a href="#designer" class="text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">设计者信息</a></li>
+                    <li class="pl-2">
+                        <a href="#design-method" class="text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">设计工具、方法、过程</a>
+                        <ul class="mt-1 space-y-1 pl-4">
+                            <li><a href="#design-tools" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">设计工具</a></li>
+                            <li><a href="#design-methods" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">设计方法</a></li>
+                            <li><a href="#design-process" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">设计过程</a></li>
+                        </ul>
+                    </li>
+                    <li class="pl-2">
+                        <a href="#case-elements" class="text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">法庭意见书要素（英文）</a>
+                        <ul class="mt-1 space-y-1 pl-4">
+                            <li><a href="#basic-info" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">Basic Information</a></li>
+                            <li><a href="#parties" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">Parties Involved</a></li>
+                            <li><a href="#facts" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">Facts of the Case</a></li>
+                            <li><a href="#legal-issues" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">Legal Issues</a></li>
+                            <li><a href="#majority-opinion" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">Majority Opinion</a></li>
+                            <li><a href="#dissenting-opinions" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">Dissenting Opinions</a></li>
+                            <li><a href="#judgment" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">Judgment</a></li>
+                        </ul>
+                    </li>
+                    <li class="pl-2">
+                        <a href="#bilingual-knowledge" class="text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">双语知识库</a>
+                        <ul class="mt-1 space-y-1 pl-4">
+                            <li><a href="#terminology" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">术语（20个）</a></li>
+                            <li><a href="#phrases" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">短语（10个）</a></li>
+                            <li><a href="#sentence-patterns" class="text-blue-600 hover:text-blue-800 text-sm hover:pl-2 transition-all">典型句型（5个）</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 中间内容区 -->
+        <section class="flex-1">
+            <!-- 设计者信息 -->
+            <div id="designer" class="bg-white rounded-lg shadow p-6 mb-8">
+                <h2 class="text-2xl font-Georgia font-bold text-blue-800 border-b-2 border-gray-200 pb-3 mb-4">设计者</h2>
+                <p class="text-lg text-gray-800">韩雯静 230622030</p>
+            </div>
+
+            <!-- 设计工具、方法、过程 -->
+            <div id="design-method" class="bg-white rounded-lg shadow p-6 mb-8">
+                <h2 class="text-2xl font-Georgia font-bold text-blue-800 border-b-2 border-gray-200 pb-3 mb-4">设计工具、方法、过程（中文）</h2>
+                
+                <!-- 设计工具 -->
+                <div id="design-tools" class="mb-6">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3 flex items-center collapse-header">
+                        <i class="fa fa-chevron-down mr-2"></i>设计工具
+                    </h3>
+                    <div class="pl-6 text-gray-800 space-y-3">
+                        <p><strong>前端开发工具：</strong>采用Visual Studio Code作为核心开发环境，搭配HTML5构建网页基础结构，通过CSS3（结合Tailwind CSS框架）实现页面样式设计，利用JavaScript实现交互功能，如案例要点折叠/展开、术语hover提示等。</p>
+                        <p><strong>原型与协作工具：</strong>使用Figma制作网页原型，明确页面布局（如顶部导航栏、左侧目录栏、主体内容区、右侧术语库侧边栏）；借助GitHub进行版本控制，确保设计过程可追溯、可修改。</p>
+                    </div>
+                </div>
+
+                <!-- 设计方法 -->
+                <div id="design-methods" class="mb-6">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3 flex items-center collapse-header">
+                        <i class="fa fa-chevron-down mr-2"></i>设计方法
+                    </h3>
+                    <div class="pl-6 text-gray-800 space-y-3">
+                        <p><strong>模块化设计法：</strong>将网页拆分为“设计者信息区”“法庭意见书原文区”“双语知识库区”“案例要素解析区”4个核心模块，每个模块独立开发且通过统一的样式表保持视觉一致性，便于后续维护与内容更新。</p>
+                        <p><strong>用户导向设计法：</strong>针对法律英语学习者的需求，在页面中添加“术语悬浮解释”功能（鼠标hover双语术语时显示详细释义）、“案例要点跳转”功能（点击目录项直接定位至对应内容），降低阅读与学习门槛。</p>
+                        <p><strong>响应式设计法：</strong>通过CSS媒体查询适配不同设备屏幕（电脑、平板、手机），在小屏幕设备上将侧边术语库转为顶部下拉菜单，确保页面布局清晰、内容可读。</p>
+                    </div>
+                </div>
+
+                <!-- 设计过程 -->
+                <div id="design-process">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3 flex items-center collapse-header">
+                        <i class="fa fa-chevron-down mr-2"></i>设计过程
+                    </h3>
+                    <div class="pl-6 text-gray-800 space-y-3">
+                        <p><strong>需求分析与内容梳理：</strong>研读作业要求，明确网页需包含“设计者信息”“设计工具方法过程”“法庭意见书要素（英文）”“双语知识库”4类核心内容；提取《法律英语泛读教程》第四单元LOCHNER V. NEW YORK案例的关键信息，包括案例基本信息（案号、审理法院、判决时间）、法庭意见核心观点、异议意见要点等，确保内容完整且符合原文逻辑。</p>
+                        <p><strong>原型设计与框架搭建：</strong>绘制网页原型，确定页面配色（以蓝色系为主，体现法律的严谨性；白色为背景色，保证文字可读性）、字体（正文使用Times New Roman，标题使用Georgia，符合法律文书的正式感）；用HTML5搭建网页骨架，定义&lt;header&gt;（设计者信息）、&lt;nav&gt;（目录导航）、&lt;main&gt;（主体内容，包含法庭意见书要素与原文）、&lt;aside&gt;（双语知识库）、&lt;footer&gt;（版权信息）等标签，确保结构语义化。</p>
+                        <p><strong>样式与交互开发：</strong>用JavaScript实现核心交互功能：编写函数实现“目录项点击跳转至对应内容”“术语hover显示详细释义”“案例要点折叠/展开”，并进行功能测试，确保在Chrome、Edge等主流浏览器中正常运行。</p>
+                        <p><strong>内容填充与校验：</strong>将梳理后的法庭意见书要素、原文片段、双语知识库内容填充至对应模块，核对英文原文与教材一致性，校验双语术语翻译准确性（参考教材附录及权威法律词典）；进行页面兼容性测试，调整不同屏幕尺寸下的布局细节，如在手机端将多列布局改为单列布局，避免文字重叠；检查链接有效性（如案例原文引用链接、术语参考链接）。</p>
+                        <p><strong>优化与上线：</strong>根据测试结果优化页面：调整文字行间距（正文行间距设为1.5倍，提升阅读舒适度）、修复交互功能bug（如术语提示框位置偏移问题）；将网页文件上传至GitHub Pages，生成可公开访问的链接。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 法庭意见书要素（英文） -->
+            <div id="case-elements" class="bg-white rounded-lg shadow p-6 mb-8">
+                <h2 class="text-2xl font-Georgia font-bold text-blue-800 border-b-2 border-gray-200 pb-3 mb-4">法庭意见书要素（英文）</h2>
+                
+                <!-- Basic Information -->
+                <div id="basic-info" class="mb-6">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3">Basic Information of the Case</h3>
+                    <ul class="list-disc pl-6 text-gray-800 space-y-1 font-Times-New-Roman">
+                        <li><strong>Case Name</strong>: LOCHNER V. NEW YORK</li>
+                        <li><strong>Citation</strong>: 198 U.S. 45 (1905)</li>
+                        <li><strong>Court</strong>: Supreme Court of the United States</li>
+                        <li><strong>Argued Date</strong>: February 23, 24, 1905</li>
+                        <li><strong>Decided Date</strong>: April 17, 1905</li>
+                        <li><strong>Error to</strong>: The County Court of Oneida County, State of New York</li>
+                    </ul>
+                </div>
+
+                <!-- Parties Involved -->
+                <div id="parties" class="mb-6">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3">Parties Involved</h3>
+                    <ul class="list-disc pl-6 text-gray-800 space-y-2 font-Times-New-Roman">
+                        <li><strong>Plaintiff in Error</strong>: Lochner (owner of a bakery in New York, convicted of violating New York’s labor law by allowing an employee to work more than 60 hours a week)</li>
+                        <li><strong>Defendant in Error</strong>: State of New York (represented by Julius M. Mayer, Attorney General of New York)</li>
+                    </ul>
+                </div>
+
+                <!-- Facts of the Case -->
+                <div id="facts" class="mb-6">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3">Facts of the Case</h3>
+                    <ol class="list-decimal pl-6 text-gray-800 space-y-2 font-Times-New-Roman">
+                        <li>In 1897, New York enacted a labor law (Article 8, Section 110 of the Laws of 1897), which prohibited employers in bakeries from "requiring or permitting" employees to work more than 60 hours per week or 10 hours per day, with no provisions for special emergencies.</li>
+                        <li>Lochner, the owner of a bakery, was indicted for violating this law by allowing an employee to work more than 60 hours in one week. He argued that the law violated the 14th Amendment of the U.S. Constitution, which protects the right to <span class="term term-hover" title="指雇主与雇员之间自主约定劳动条件的权利，是14修正案所保护的'个人自由'核心内容">liberty of contract</span> between employers and employees.</li>
+                        <li>The lower courts (Supreme Court and <span class="term term-hover" title="州司法体系中的上诉审法院，案例中原审判决由纽约州上诉法院作出，后被联邦最高法院推翻">Court of Appeals</span> of New York) upheld the validity of the labor law, convicting Lochner. Lochner then appealed to the <span class="term term-hover" title="美国联邦司法体系的最高审级，有权审查州法是否符合联邦宪法">Supreme Court of the United States</span>.</li>
+                    </ol>
+                </div>
+
+                <!-- Legal Issues -->
+                <div id="legal-issues" class="mb-6">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3">Legal Issues</h3>
+                    <ol class="list-decimal pl-6 text-gray-800 space-y-2 font-Times-New-Roman">
+                        <li>Whether the New York labor law, which limits the working hours of bakery employees, constitutes an <span class="term term-hover" title="指法律或政府行为违反宪法规定">unconstitutional</span> interference with the "liberty of contract" protected by the <span class="term term-hover" title="美国宪法第14修正案中的条款，禁止各州未经正当法律程序剥夺公民的生命、自由或财产">Due Process Clause</span> of the 14th Amendment.</li>
+                        <li>Whether the state’s exercise of <span class="term term-hover" title="州政府为保护公共健康、安全、道德和公共福利而行使的固有权力">police power</span> (to protect public health, safety, morals, and general welfare) extends to regulating the working hours of bakery employees, or whether such regulation exceeds the scope of valid police power.</li>
+                    </ol>
+                </div>
+
+                <!-- Majority Opinion -->
+                <div id="majority-opinion" class="mb-6">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3">Majority Opinion (Delivered by MR. JUSTICE PECKHAM)</h3>
+                    <div class="pl-4 text-gray-800 space-y-3 font-Times-New-Roman">
+                        <p><strong>1. Core Holding</strong>: The New York labor law is unconstitutional because it arbitrarily interferes with the liberty of contract between employers and employees, which is protected by the 14th Amendment’s Due Process Clause.</p>
+                        <p><strong>2. Key Reasoning</strong>:</p>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li>The general right to make contracts related to one’s business is part of the individual liberty protected by the 14th Amendment (citing <em>Allgeyer v. Louisiana</em>, 165 U.S. 578). The right to purchase or sell labor is within this protected liberty, unless there are circumstances justifying state interference.</li>
+                            <li>The state’s police power is limited to regulating matters related to public health, safety, morals, and general welfare. However, baking is not an "unhealthy <span class="term term-hover" title="指个人从事的工作类型">occupation</span>" to a degree that justifies the state’s interference with the right of contract. The majority argued that:
+                                <ul class="list-circle pl-6 space-y-1">
+                                    <li>There is no reasonable basis to claim that working more than 60 hours a week in a bakery endangers employees’ health. Unlike mining or smelting (which the Court had previously allowed to be regulated in <em>Holden v. Hardy</em>, 169 U.S. 366), baking does not involve inherent health risks that require hour limits.</li>
+                                    <li>The law does not address "cleanliness" or "sanitation" of bakeries (which could be valid police power regulations), but only limits working hours. Such a limitation has no direct relation to <span class="term term-hover" title="州警察权的核心保护对象之一">public health</span>.</li>
+                                </ul>
+                            </li>
+                            <li>If the state could regulate the working hours of bakery employees under the guise of police power, there would be no limit to state interference with other occupations (e.g., printers, clerks, lawyers), which would undermine the 14th Amendment’s protection of liberty.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Dissenting Opinions -->
+                <div id="dissenting-opinions" class="mb-6">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3">Dissenting Opinions</h3>
+                    <div class="pl-4 text-gray-800 space-y-4 font-Times-New-Roman">
+                        <div>
+                            <p><strong>1. MR. JUSTICE HARLAN (with MR. JUSTICE WHITE and MR. JUSTICE DAY concurring)</strong>:</p>
+                            <ul class="list-disc pl-6 space-y-2">
+                                <li>The state’s police power includes the authority to regulate working hours to protect employees’ health, especially when the occupation involves potential health risks (e.g., long hours in a bakery’s hot, flour-dusty environment).</li>
+                                <li>The legislature, not the courts, is the proper body to determine whether an occupation is unhealthy and whether regulation is necessary. The New York legislature’s judgment that bakery work requires hour limits is a <span class="term term-hover" title="指政府行为符合宪法和法律规定">valid exercise of power</span> of its policy-making authority, and the courts should not substitute their judgment for the legislature’s.</li>
+                                <li>Citing expert opinions (e.g., Professor Hirt’s <em>Diseases of the Workers</em>), the dissent argued that bakery work is laborious, often performed in overheated, dusty conditions, and long hours can lead to respiratory diseases, rheumatism, and shortened lifespans—justifying the state’s regulation.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p><strong>2. MR. JUSTICE HOLMES</strong>:</p>
+                            <ul class="list-disc pl-6 space-y-2">
+                                <li>The majority’s decision is based on an economic theory (laissez-faire) that is not embodied in the Constitution. The 14th Amendment does not "enact Mr. Herbert Spencer’s <em>Social Statics</em>" (a reference to Spencer’s laissez-faire philosophy).</li>
+                                <li>The state has the right to enact laws that reflect the dominant public opinion of the time, even if judges disagree with the economic theory behind them. Sunday laws, usury laws, and vaccination laws (citing <em>Jacobson v. Massachusetts</em>, 197 U.S. 11) all interfere with liberty of contract but are valid exercises of state power.</li>
+                                <li>A constitution is "made for people of fundamentally differing views," and the court should not strike down a state <span class="term term-hover" title="由立法机关制定的法律">statute</span> merely because it conflicts with the judges’ economic beliefs.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Judgment -->
+                <div id="judgment">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-3">Judgment</h3>
+                    <p class="pl-4 text-gray-800 font-Times-New-Roman">The Supreme Court <span class="term term-hover" title="上级法院推翻下级法院的判决">reversed the judgment</span> of the Court of Appeals of New York and the County Court of Oneida County, holding that the New York labor law violated the 14th Amendment. Lochner’s conviction was overturned.</p>
+                </div>
+            </div>
+
+            <!-- 双语知识库 -->
+            <div id="bilingual-knowledge" class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-Georgia font-bold text-blue-800 border-b-2 border-gray-200 pb-3 mb-4">双语知识库</h2>
+                
+                <!-- 术语（20个） -->
+                <div id="terminology" class="mb-8">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-4">（一）术语（20个，含英文、中文释义及案例语境）</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- 术语1-10 -->
+                        <div class="space-y-4">
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="指雇主与雇员之间自主约定劳动条件的权利，是14修正案所保护的'个人自由'核心内容">1. Liberty of Contract</span></p>
+                                <p class="text-gray-700">合同自由（指雇主与雇员之间自主约定劳动条件的权利，是14修正案所保护的“个人自由”核心内容。案例中多数意见认为纽约州劳动法限制面包店员工工时，侵犯了这一权利）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "The general right to make a contract in relation to his business is part of the liberty of the individual protected by the Fourteenth Amendment of the Federal Constitution."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="州政府为保护公共健康、安全、道德和公共福利而行使的固有权力">2. Police Power</span></p>
+                                <p class="text-gray-700">警察权（州政府为保护公共健康、安全、道德和公共福利而行使的固有权力，案例中纽约州主张其劳动法是警察权的合法行使）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "Those powers, broadly stated and without, at present, any attempt at a more specific limitation, relate to the safety, health, morals and general welfare of the public."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="美国宪法第14修正案中的条款，禁止各州未经正当法律程序剥夺公民的生命、自由或财产">3. Due Process Clause</span></p>
+                                <p class="text-gray-700">正当法律程序条款（美国宪法第14修正案中的条款，禁止各州未经正当法律程序剥夺公民的生命、自由或财产，案例中原告以该条款为依据挑战州法）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "Under that provision no State can deprive any person of life, liberty or property without due process of law."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="规范雇主与雇员之间劳动关系的法律">4. Labor Law</span></p>
+                                <p class="text-gray-700">劳动法（规范雇主与雇员之间劳动关系的法律，案例中争议的纽约州法律即属于劳动法范畴，限制了面包店的工时）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "The indictment charged that the plaintiff in error violated the one hundred and tenth section of article 8, chapter 415, of the Laws of 1897, known as the labor law of the State of New York."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="检察机关对犯罪嫌疑人提起公诉的法律文书">5. Indictment</span></p>
+                                <p class="text-gray-700">起诉书（检察机关对犯罪嫌疑人提起公诉的法律文书，案例中原告因违反劳动法被提起公诉，相关指控载于起诉书中）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "The indictment, it will be seen, charges that the plaintiff in error violated the one hundred and tenth section of article 8, chapter 415, of the Laws of 1897..."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="在上诉案件中提起上诉的一方">6. Plaintiff in Error</span></p>
+                                <p class="text-gray-700">上诉人（在上诉案件中提起上诉的一方，案例中Lochner作为原审被告，对判决不服提起上诉，故为上诉人）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "Mr. Frank Harvey Field and Mr. Henry Weissmann for plaintiff in error."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="在上诉案件中回应上诉的一方">7. Defendant in Error</span></p>
+                                <p class="text-gray-700">被上诉人（在上诉案件中回应上诉的一方，案例中纽约州作为原审原告，回应Lochner的上诉，故为被上诉人）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "Mr. Julius M. Mayer, Attorney General of the State of New York, for defendant in error."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="最高法院中多数法官出具的意见，具有法律效力">8. Majority Opinion</span></p>
+                                <p class="text-gray-700">多数意见（最高法院中多数法官出具的意见，具有法律效力，案例中Peckham大法官撰写的多数意见裁定纽约州劳动法违宪）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "MR. JUSTICE PECKHAM, after making the foregoing statement of the facts, delivered the opinion of the court."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="最高法院中少数法官对多数意见的反对意见，无法律效力但具有参考价值">9. Dissenting Opinion</span></p>
+                                <p class="text-gray-700">异议意见（最高法院中少数法官对多数意见的反对意见，无法律效力但具有参考价值，案例中Harlan大法官和Holmes大法官分别出具了异议意见）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "MR. JUSTICE HARLAN, with whom MR. JUSTICE WHITE and MR. JUSTICE DAY concurred, dissenting."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="美国联邦司法体系的最高审级，有权审查州法是否符合联邦宪法">10. Supreme Court of the United States</span></p>
+                                <p class="text-gray-700">美国最高法院（美国联邦司法体系的最高审级，有权审查州法是否符合联邦宪法，案例即由该法院审理并作出最终判决）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "LOCHNER V. NEW YORK 198 U.S. 45 (1905) Supreme Court of United States"</p>
+                            </div>
+                        </div>
+                        <!-- 术语11-20 -->
+                        <div class="space-y-4">
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="州司法体系中的上诉审法院">11. Court of Appeals</span></p>
+                                <p class="text-gray-700">上诉法院（州司法体系中的上诉审法院，案例中原审判决由纽约州上诉法院作出，后被联邦最高法院推翻）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "In the Supreme Court two of the five judges composing the Appellate Division dissented from the judgment affirming the validity of the act. In the Court of Appeals three of the seven judges also dissented."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="州司法体系中的基层法院">12. County Court</span></p>
+                                <p class="text-gray-700">郡法院（州司法体系中的基层法院，案例中Lochner最初在纽约州奥奈达郡法院被定罪）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "ERROR TO THE COUNTY COURT OF ONEIDA COUNTY, STATE OF NEW YORK."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="指法律或政府行为违反宪法规定">13. Unconstitutional</span></p>
+                                <p class="text-gray-700">违宪的（指法律或政府行为违反宪法规定，案例中联邦最高法院裁定纽约州劳动法违宪）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "We think that the limit of the police power has been reached and passed in this case... the act is not, within any fair meaning of the term, a health law, but is an illegal interference with the rights of individuals..."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="指政府行为符合宪法和法律规定">14. Valid Exercise of Power</span></p>
+                                <p class="text-gray-700">权力的合法行使（指政府行为符合宪法和法律规定，案例中异议意见认为纽约州劳动法是警察权的合法行使）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "The act was held to be a valid exercise of the police powers of the State." (referring to <em>Holden v. Hardy</em>)</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="州警察权的核心保护对象之一">15. Public Health</span></p>
+                                <p class="text-gray-700">公共健康（州警察权的核心保护对象之一，案例中纽约州主张工时限制是为了保护面包店员工的公共健康）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "The law must be upheld, if at all, as a law pertaining to the health of the individual engaged in the occupation of a baker."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="指个人从事的工作类型">16. Occupation</span></p>
+                                <p class="text-gray-700">职业（指个人从事的工作类型，案例中争议焦点是“面包师”这一职业是否需要通过州法限制工时）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "the occupation of a baker, in and of itself, is not an unhealthy one to that degree which would authorize the legislature to interfere with the right to labor."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="由立法机关制定的法律">17. Statute</span></p>
+                                <p class="text-gray-700">制定法（由立法机关制定的法律，案例中争议的纽约州劳动法即属于制定法）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "Statutes of the nature of that under review, limiting the hours in which grown and intelligent men may labor to earn their living, are mere meddlesome interferences with the rights of the individual."</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="法院审查下级法院判决的权力">18. Appellate Jurisdiction</span></p>
+                                <p class="text-gray-700">上诉管辖权（法院审查下级法院判决的权力，美国联邦最高法院对本案行使的即上诉管辖权）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "We granted certiorari to review this important decision involving rights protected by the First and Fourteenth Amendments." (similar logic applies to appellate jurisdiction in this case)</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="最高法院签发的命令，要求下级法院提交案件记录以供审查">19. Certiorari</span></p>
+                                <p class="text-gray-700">调卷令（最高法院签发的命令，要求下级法院提交案件记录以供审查，案例中最高法院通过签发调卷令受理了本案）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "ERROR TO THE COUNTY COURT OF ONEIDA COUNTY, STATE OF NEW YORK." (implied in the court’s acceptance of the appeal via certiorari)</p>
+                            </div>
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-bold text-blue-800"><span class="term term-hover" title="上级法院推翻下级法院的判决">20. Judgment Reversed</span></p>
+                                <p class="text-gray-700">判决撤销（上级法院推翻下级法院的判决，案例中联邦最高法院撤销了纽约州法院对Lochner的定罪判决）</p>
+                                <p class="text-sm text-gray-600 italic mt-1">*Context*: "The judgment of the Court of Appeals of New York as well as that of the Supreme Court and of the County Court of Oneida County must be reversed and the case remanded to the County Court for further proceedings not inconsistent with this opinion."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 短语（10个） -->
+                <div id="phrases" class="mb-8">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-4">（二）短语（10个，含英文、中文释义及案例语境）</h3>
+                    <div class="space-y-4">
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="指行为人未遵守劳动法的规定">1. Violate the labor law</span></p>
+                            <p class="text-gray-700">违反劳动法（指行为人未遵守劳动法的规定，案例中原告因允许员工每周工作超过60小时而被指控违反纽约州劳动法）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "The indictment charged that the plaintiff in error violated the one hundred and tenth section of article 8, chapter 415, of the Laws of 1897, known as the labor law of the State of New York."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="指政府或第三方对雇主与雇员之间自主约定劳动条件的权利进行限制">2. Interfere with the liberty of contract</span></p>
+                            <p class="text-gray-700">干涉合同自由（指政府或第三方对雇主与雇员之间自主约定劳动条件的权利进行限制，案例中多数意见认为纽约州劳动法构成了对合同自由的非法干涉）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "The statute necessarily interferes with the right of contract between the employer and employees, concerning the number of hours in which the latter may labor in the bakery of the employer."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="州政府为保护公共利益而采取的监管行为">3. Exercise of police power</span></p>
+                            <p class="text-gray-700">行使警察权（州政府为保护公共利益而采取的监管行为，案例中纽约州主张其工时限制是行使警察权的体现）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "The State, therefore, has power to prevent the individual from making certain kinds of contracts, and in regard to them the Federal Constitution offers no protection if the contract be one which the State, in the legitimate exercise of its police power, has the right to prohibit."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="指对从业者身体健康存在固有风险的职业">4. Unhealthy occupation</span></p>
+                            <p class="text-gray-700">有害健康的职业（指对从业者身体健康存在固有风险的职业，案例中多数意见认为面包师不属于此类职业）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "We think that there can be no fair doubt that the trade of a baker, in and of itself, is not an unhealthy one to that degree which would authorize the legislature to interfere with the right to labor."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="宪法规定的公民权利，要求政府在剥夺公民权益时遵循合法程序">5. Due process of law</span></p>
+                            <p class="text-gray-700">正当法律程序（宪法规定的公民权利，要求政府在剥夺公民权益时遵循合法程序，案例中原告主张纽约州劳动法未经正当程序剥夺了其合同自由）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "Under that provision no State can deprive any person of life, liberty or property without due process of law."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="最高法院法官对案件的不同观点，多数意见具有法律效力，异议意见反映不同立场">6. Majority and dissenting opinions</span></p>
+                            <p class="text-gray-700">多数意见与异议意见（最高法院法官对案件的不同观点，多数意见具有法律效力，异议意见反映不同立场，案例中双方围绕工时限制的合法性展开激烈争论）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "In the Supreme Court two of the five judges composing the Appellate Division dissented from the judgment affirming the validity of the act. In the Court of Appeals three of the seven judges also dissented from the judgment upholding the statute."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="上级法院将案件退回下级法院，要求其根据上级法院的意见重新审理">7. Remand the case</span></p>
+                            <p class="text-gray-700">发回案件（上级法院将案件退回下级法院，要求其根据上级法院的意见重新审理，案例中最高法院撤销原判后将案件发回郡法院）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "The judgment of the Court of Appeals of New York as well as that of the Supreme Court and of the County Court of Oneida County must be reversed and the case remanded to the County Court for further proceedings not inconsistent with this opinion."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="政府行为的核心目标之一，州警察权的行使需以促进公共福利为目的">8. Public welfare</span></p>
+                            <p class="text-gray-700">公共福利（政府行为的核心目标之一，州警察权的行使需以促进公共福利为目的，案例中纽约州主张工时限制有利于公共福利）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "Those powers, broadly stated and without, at present, any attempt at a more specific limitation, relate to the safety, health, morals and general welfare of the public."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="由宪法赋予公民的基本权利">9. Constitutional right</span></p>
+                            <p class="text-gray-700">宪法权利（由宪法赋予公民的基本权利，案例中原告主张合同自由是受14修正案保护的宪法权利）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "The general right to make a contract in relation to his business is part of the liberty of the individual protected by the Fourteenth Amendment of the Federal Constitution."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800"><span class="term term-hover" title="上级法院推翻下级法院对被告人的有罪判决">10. Overturn the conviction</span></p>
+                            <p class="text-gray-700">撤销定罪（上级法院推翻下级法院对被告人的有罪判决，案例中最高法院撤销了对Lochner的定罪）</p>
+                            <p class="text-sm text-gray-600 italic mt-1">*Context*: "The judgment of the Court of Appeals of New York as well as that of the Supreme Court and of the County Court of Oneida County must be reversed..." (reversal of the conviction is implied)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 典型句型（5个） -->
+                <div id="sentence-patterns">
+                    <h3 class="text-xl font-Georgia font-bold text-blue-700 mb-4">（三）典型句型（5个，含英文、中文释义及案例语境）</h3>
+                    <div class="space-y-4">
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800">1. "The [statute/act] interferes with the right of contract between the employer and employees, which is protected by the [Amendment] of the Federal Constitution."</p>
+                            <p class="text-gray-700 mt-2">“[法律/法案]干涉了雇主与雇员之间的合同自由，而该权利受联邦宪法第[X]修正案保护。”（用于主张某法律侵犯宪法所保护的合同自由，案例中多数意见用此逻辑挑战纽约州劳动法）</p>
+                            <p class="text-sm text-gray-600 italic mt-2">*Context*: "The statute necessarily interferes with the right of contract between the employer and employees, concerning the number of hours in which the latter may labor in the bakery of the employer. The general right to make a contract in relation to his business is part of the liberty of the individual protected by the Fourteenth Amendment of the Federal Constitution."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800">2. "The State has the power to [regulate/limit] [activity] under its police power, but such power is limited to matters related to public health, safety, morals, and general welfare."</p>
+                            <p class="text-gray-700 mt-2">“州政府有权根据其警察权[监管/限制][某行为]，但该权力仅限于与公共健康、安全、道德和公共福利相关的事务。”（用于界定州警察权的范围，案例中多数意见用此句型强调纽约州劳动法超出了警察权的合理范围）</p>
+                            <p class="text-sm text-gray-600 italic mt-2">*Context*: "Those powers, broadly stated and without, at present, any attempt at a more specific limitation, relate to the safety, health, morals and general welfare of the public. Both property and liberty are held on such reasonable conditions as may be imposed by the governing power of the State in the exercise of those powers."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800">3. "The [court] holds that the [statute/act] is unconstitutional because it [reason], and thus reverses the judgment of the lower court."</p>
+                            <p class="text-gray-700 mt-2">“[法院]认为[法律/法案]因[理由]而违宪，因此撤销下级法院的判决。”（用于表述法院对法律合宪性的判定及最终裁决，案例中最高法院用此逻辑作出判决）</p>
+                            <p class="text-sm text-gray-600 italic mt-2">*Context*: "We think that the limit of the police power has been reached and passed in this case... The act is not, within any fair meaning of the term, a health law, but is an illegal interference with the rights of individuals... The judgment of the Court of Appeals of New York as well as that of the Supreme Court and of the County Court of Oneida County must be reversed."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800">4. "In dissent, [Justice] argues that the [statute/act] is a valid exercise of the State’s police power, as it [reason]."</p>
+                            <p class="text-gray-700 mt-2">“在异议意见中，[大法官]主张[法律/法案]是州警察权的合法行使，因为[理由]。”（用于概述异议意见的核心观点，案例中Harlan大法官的异议意见采用此逻辑）</p>
+                            <p class="text-sm text-gray-600 italic mt-2">*Context*: "MR. JUSTICE HARLAN, with whom MR. JUSTICE WHITE and MR. JUSTICE DAY concurred, dissenting... It is plain that this statute was enacted in order to protect the physical well-being of those who work in bakery and confectionery establishments... the action of the State has a real and substantial relation to the protection of health."</p>
+                        </div>
+                        <div class="p-3 border border-gray-200 rounded-lg">
+                            <p class="font-bold text-blue-800">5. "The question before the Court is whether the [statute/act] violates the [Clause/Amendment] of the Constitution by [conduct]."</p>
+                            <p class="text-gray-700 mt-2">“法院面临的问题是，[法律/法案]是否通过[行为]违反了宪法第[条款/修正案]。”（用于明确案件的核心法律争议，案例中最高法院的审理围绕此句型所表述的问题展开）</p>
+                            <p class="text-sm text-gray-600 italic mt-2">*Context*: "The question before the Court is whether this act is valid as a labor law, pure and simple... or is it an unreasonable, unnecessary and arbitrary interference with the right of the individual to his personal liberty or to enter into those contracts in relation to labor which may seem to him appropriate or necessary for the support of himself and his family?"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右侧术语库侧边栏（桌面端显示，移动端隐藏） -->
+        <aside class="hidden lg:block w-72 flex-shrink-0">
+            <div class="bg-white rounded-lg shadow p-4 sidebar-sticky">
+                <h3 class="text-lg font-Georgia font-bold text-blue-800 border-b-2 border-gray-200 pb-2 mb-4">术语速查</h3>
+                <div class="space-y-2 text-sm">
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">1. Liberty of Contract - 合同自由</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">2. Police Power - 警察权</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">3. Due Process Clause - 正当法律程序条款</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">4. Labor Law - 劳动法</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">5. Indictment - 起诉书</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">6. Plaintiff in Error - 上诉人</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">7. Defendant in Error - 被上诉人</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">8. Majority Opinion - 多数意见</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">9. Dissenting Opinion - 异议意见</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">10. Supreme Court of the United States - 美国最高法院</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">11. Court of Appeals - 上诉法院</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">12. County Court - 郡法院</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">13. Unconstitutional - 违宪的</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">14. Valid Exercise of Power - 权力的合法行使</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">15. Public Health - 公共健康</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">16. Occupation - 职业</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">17. Statute - 制定法</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">18. Appellate Jurisdiction - 上诉管辖权</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">19. Certiorari - 调卷令</a>
+                    <a href="#terminology" class="block text-blue-700 hover:text-blue-900 hover:pl-2 transition-all">20. Judgment Reversed - 判决撤销</a>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-blue-800 text-white py-4">
+        <div class="container mx-auto px-4 text-center text-sm">
+            <p>© 2025 交互网页设计：LOCHNER V. NEW YORK 法庭意见书 | 设计者：韩雯静</p>
+        </div>
+    </footer>
+
+    <!-- 移动端菜单切换脚本 -->
+    <script>
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
